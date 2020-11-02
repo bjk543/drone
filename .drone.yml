@@ -1,24 +1,19 @@
 kind: pipeline
+type: exec
 name: default
+
+platform:
+  os: linux
+  arch: amd64
+
 steps:
-  - name: test
-    image: node:10.14.2
-    commands:
-      - npm install
-      - npm run test
-    when:
-      event:
-        - push
-        - pull_request
-  - name: build-docker-image
-    image: alpine
-    err_ignore: true
-    commands:
-      - echo Building image
-    when:
-      event:
-        - push
-      branch:
-        - master
-        - stage
-        - development
+- name: greeting
+  commands:
+  - echo hello world
+  when:
+    branch: master
+    event: push
+
+trigger:
+  branch:
+  - refs/heads/master
