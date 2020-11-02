@@ -1,19 +1,27 @@
+---
 kind: pipeline
-type: exec
-name: default
+name: testing
 
 platform:
   os: linux
   arch: amd64
 
 steps:
-- name: greeting
+- name: release
+  image: node:13
+  environment:
+    NODE_ENV: gh-pages
   commands:
-  - echo hello world
-  when:
-    branch: master
-    event: push
+  - yarn install
+  - yarn build
 
-trigger:
-  branch:
-  - refs/heads/master
+- name: publish
+  image: appleboy/gh-pages
+  pull: always
+  settings:
+    username:
+      from_secret: username
+    password:
+      from_secret: password
+    pages_directory: dist
+    target_directory: 2020
